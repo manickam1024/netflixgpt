@@ -1,8 +1,15 @@
+import { Link } from 'react-router-dom'
+
 const Browse = () => {
   return (
-    <p className=" text-2xl text-red-400  flex justify-center">
-      this is a browse page{' '}
-    </p>
+    <>
+      <p className=" text-2xl text-red-400  flex justify-center">
+        this is a browse page
+      </p>
+      <Link to="/login" className="text-blue-500 underline">
+        Login
+      </Link>
+    </>
   )
 }
 
