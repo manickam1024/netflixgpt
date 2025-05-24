@@ -9,7 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import firebaseConfig from '../utils/Firebase'
 import { useDispatch } from 'react-redux'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { additem, removeitem } from '../utils/slice'
@@ -21,29 +21,28 @@ const Login = () => {
 
   const email = useRef(null)
   const password = useRef(null)
+  const username = useRef(null)
   const reenterpassword = useRef(null)
   const Navigate = useNavigate()
   const auth = getAuth()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // redux store actions
-
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const { uid, email } = user
-
-        dispatch(additem({ email: email, uid: uid }))
+        const { uid, email, displayName, photoURL } = user
+        dispatch(additem({ email, uid, displayName, photoURL }))
       } else {
         dispatch(removeitem())
       }
     })
+
+    // ✅ Clean up the listener
+    return () => unsubscribe()
   }, [])
 
   // subscribing to the redux store
   const read = useSelector((store) => store.authentication.items)
-
-  console.log(read)
 
   function handleclick() {
     const result = validate(email.current.value, password.current.value)
@@ -86,6 +85,12 @@ const Login = () => {
           .then((userCredential) => {
             // Signed up
             const user = userCredential.user
+            updateProfile(user, {
+              displayName: username.current.value,
+              photoURL: 'https://example.com/jane-q-user/profile.jpg',
+            })
+
+            window.alert('user succesfully signed up')
             // ...
           })
           .catch((error) => {
@@ -142,7 +147,17 @@ const Login = () => {
               type="password"
               name="reenterpassword"
               placeholder="Re-enter password"
-              className=" p-2 w-72 mb-6 rounded-sm bg-transparent  border-gray-500 border-2"
+              className=" p-2 w-72 mb-6 rounded-sm bg-transparent  border-gray-500 border-2  text-gray-400"
+              required
+            />
+          )}
+          {!signin && (
+            <input
+              ref={username}
+              type="text"
+              name="name"
+              placeholder="ENTER FULL NAME"
+              className=" p-2 w-72 mb-6 rounded-sm bg-transparent  border-gray-500 border-2  text-gray-400"
               required
             />
           )}
