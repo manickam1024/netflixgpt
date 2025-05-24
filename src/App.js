@@ -8,7 +8,6 @@ import Footer from './components/footer'
 import { Home } from './components/home'
 import { Provider } from 'react-redux'
 import store from './utils/appstore'
-import { Red } from '../src/App.js'
 
 // App component
 const App = () => {
@@ -17,7 +16,6 @@ const App = () => {
       <Header />
       <Outlet />
       <Footer />
-      <Red />
     </Provider>
   )
 }
@@ -43,6 +41,5 @@ const router = createBrowserRouter([
     ],
   },
 ])
-console.log(router)
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(<RouterProvider router={router} />)

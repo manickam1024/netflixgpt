@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom'
 import firebaseConfig from '../utils/Firebase'
 import { useDispatch } from 'react-redux'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { additem, removeitem } from '../utils/slice'
 
 const Login = () => {
   const [signin, setsignin] = useState(true)
@@ -20,7 +23,27 @@ const Login = () => {
   const password = useRef(null)
   const reenterpassword = useRef(null)
   const Navigate = useNavigate()
+  const auth = getAuth()
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    // redux store actions
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email } = user
+
+        dispatch(additem({ email: email, uid: uid }))
+      } else {
+        dispatch(removeitem())
+      }
+    })
+  }, [])
+
+  // subscribing to the redux store
+  const read = useSelector((store) => store.authentication.items)
+
+  console.log(read)
 
   function handleclick() {
     const result = validate(email.current.value, password.current.value)
