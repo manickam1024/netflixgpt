@@ -1,19 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Browse from './components/browse'
 import Login from './components/login'
 import Header from './components/header'
 import Footer from './components/footer'
+import { Home } from './components/home'
+import { Provider } from 'react-redux'
+import store from './utils/appstore'
+import { Red } from '../src/App.js'
 
 // App component
 const App = () => {
   return (
-    <div>
+    <Provider store={store}>
       <Header />
       <Outlet />
       <Footer />
-    </div>
+      <Red />
+    </Provider>
   )
 }
 
@@ -31,9 +36,13 @@ const router = createBrowserRouter([
         path: '/login',
         element: <Login />,
       },
+      {
+        path: '/home',
+        element: <Home />,
+      },
     ],
   },
 ])
-
+console.log(router)
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(<RouterProvider router={router} />)

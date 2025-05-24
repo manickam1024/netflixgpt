@@ -1,8 +1,77 @@
-import { useState } from 'react'
-import { defer } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { validate } from '../utils/validation'
+import { useRef } from 'react'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth'
+import { useNavigate } from 'react-router-dom'
+import firebaseConfig from '../utils/Firebase'
+import { useDispatch } from 'react-redux'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const Login = () => {
-  const [signup, setsignup] = useState(true)
+  const [signin, setsignin] = useState(true)
+
+  const [msg, setMsg] = useState()
+
+  const email = useRef(null)
+  const password = useRef(null)
+  const reenterpassword = useRef(null)
+  const Navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  function handleclick() {
+    const result = validate(email.current.value, password.current.value)
+
+    const auth = getAuth()
+    setMsg(result)
+
+    //firebase method for signin
+    {
+      signin &&
+        signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            const user = userCredential.user
+            Navigate('/home')
+          })
+          .catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
+
+            setMsg('wrong username or password')
+          })
+    }
+
+    //sign up evaluation
+    if (!signin && password.current.value != reenterpassword.current.value) {
+      setMsg('password does not match')
+    }
+    //firebase signup evaluation
+    {
+      !signin &&
+        createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            // Signed up
+            const user = userCredential.user
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
+            // ..
+          })
+    }
+  }
 
   return (
     <div>
@@ -22,43 +91,56 @@ const Login = () => {
       >
         <h1 className="text-white text-3xl p-12 pl-12 font-bold">
           {' '}
-          {signup ? ' Login' : 'Signup'}
+          {signin ? ' Login' : 'Signup'}
         </h1>
         <form className="p-5 pl-12  ">
           {' '}
           <input
+            ref={email}
             type="text"
-            name="username"
-            id="username"
+            name="email"
+            id="email"
             className=" p-2 w-72 mb-8 rounded-sm bg-transparent border-gray-500 border-2 text-gray-400"
-            placeholder="username"
+            placeholder="email"
+            required
           />{' '}
           <br />
           <input
+            ref={password}
             type="password"
             name="password"
             placeholder="password"
             className=" p-2 w-72 mb-8 rounded-sm bg-transparent  border-gray-500 border-2  text-gray-400"
+            required
           />
-          {!signup && (
+          {!signin && (
             <input
+              ref={reenterpassword}
               type="password"
               name="reenterpassword"
               placeholder="Re-enter password"
-              className=" p-2 w-72 mb-8 rounded-sm bg-transparent  border-gray-500 border-2"
+              className=" p-2 w-72 mb-6 rounded-sm bg-transparent  border-gray-500 border-2"
+              required
             />
           )}
-          <button className="bg-red-600 w-72 p-2 rounded-xl text-white font-bold">
-            {signup ? ' login' : 'signup'}
+          <p className="text-red-600 pb-5">{msg}</p>
+          <button
+            className="bg-red-600 w-72 p-2 rounded-xl text-white font-bold"
+            onClick={function (event) {
+              event.preventDefault()
+              handleclick()
+            }}
+          >
+            {signin ? ' login' : 'signup'}
           </button>
           <button
             className="  text-white font-bold mt-5"
             onClick={function (event) {
               event.preventDefault() // stops default reloading of page because its in form
-              setsignup(!signup)
+              setsignin(!signin)
             }}
           >
-            {signup ? 'New user ? just sign up' : 'Existing user? sign in '}
+            {signin ? 'New user ? just sign up' : 'Existing user? sign in '}
           </button>
         </form>
       </div>
