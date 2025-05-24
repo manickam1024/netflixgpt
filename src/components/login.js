@@ -6,13 +6,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
 import firebaseConfig from '../utils/Firebase'
-import { useDispatch } from 'react-redux'
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { additem, removeitem } from '../utils/slice'
 
 const Login = () => {
   const [signin, setsignin] = useState(true)
@@ -23,31 +18,11 @@ const Login = () => {
   const password = useRef(null)
   const username = useRef(null)
   const reenterpassword = useRef(null)
-  const Navigate = useNavigate()
   const auth = getAuth()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { uid, email, displayName, photoURL } = user
-        dispatch(additem({ email, uid, displayName, photoURL }))
-      } else {
-        dispatch(removeitem())
-      }
-    })
-
-    // ✅ Clean up the listener
-    return () => unsubscribe()
-  }, [])
-
-  // subscribing to the redux store
-  const read = useSelector((store) => store.authentication.items)
 
   function handleclick() {
     const result = validate(email.current.value, password.current.value)
 
-    const auth = getAuth()
     setMsg(result)
 
     //firebase method for signin
@@ -60,7 +35,6 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user
-            Navigate('/home')
           })
           .catch((error) => {
             const errorCode = error.code

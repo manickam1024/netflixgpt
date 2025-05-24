@@ -8,6 +8,7 @@ import Footer from './components/footer'
 import { Home } from './components/home'
 import { Provider } from 'react-redux'
 import store from './utils/appstore'
+import Body from './components/body'
 
 // App component
 const App = () => {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/home',
         element: <Home />,
+      },
+      {
+        path: '/body',
+        element: <Body />,
       },
     ],
   },
