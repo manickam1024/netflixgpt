@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import Browse from './components/browse'
 import Login from './components/login'
 import Header from './components/header'
 import Footer from './components/footer'
-import { Home } from './components/home'
+import { Browse } from './components/browse'
 import { Provider } from 'react-redux'
 import store from './utils/appstore'
-import Body from './components/body'
 
 // App component
 const App = () => {
@@ -36,12 +34,8 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: '/home',
-        element: <Home />,
-      },
-      {
-        path: '/body',
-        element: <Body />,
+        path: '/browse',
+        element: <Browse />,
       },
     ],
   },
