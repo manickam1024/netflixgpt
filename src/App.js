@@ -6,7 +6,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import { Provider } from 'react-redux'
 import store from './utils/appstore'
-import Browse from './components/browse'
+import Browse from './components/browse/browse'
 // App component
 const App = () => {
   return (
