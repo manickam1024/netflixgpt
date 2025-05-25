@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { validate } from '../utils/validation'
 import { useRef } from 'react'
 import {
@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import firebaseConfig from '../utils/Firebase'
-import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth'
+import { getAuth, updateProfile } from 'firebase/auth'
 
 const Login = () => {
   const [signin, setsignin] = useState(true)
@@ -78,7 +78,8 @@ const Login = () => {
   return (
     <div>
       {' '}
-      <div className="absolute overflow-hidden">
+      {/* here i provided z-index so that my header  element goes back of my div */}
+      <div className="absolute overflow-hidden z-50 ">
         {' '}
         <img
           className="overflow-hidden h-screen w-screen"
@@ -89,7 +90,7 @@ const Login = () => {
       <div
         id="loginform"
         style={{ height: 'max-content ' }}
-        className="w-96 bg-black absolute left-0 right-0 top-0 bottom-0 my-auto mx-auto rounded-2xl bg-opacity-80 pb-8"
+        className="w-96 bg-black absolute left-0 right-0 top-0 bottom-0 my-auto mx-auto rounded-2xl bg-opacity-80 pb-8 z-50"
       >
         <h1 className="text-white text-3xl p-12 pl-12 font-bold">
           {' '}

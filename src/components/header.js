@@ -36,10 +36,22 @@ const Header = () => {
       .catch((error) => {})
   }
   return (
-    <div className="h-16 w-full bg-gradient-to-b from-black flex-col absolute">
-      <div>
-        <h1>Welcome home {data[0]?.displayName}!!</h1>
-        <button onClick={handlesignout}>Sign Out</button>
+    <div className="h-16 w-full bg-gradient-to-b from-black flex-col absolute z-40">
+      <div className="right-0 absolute flex top-4 right-16 ">
+        <div className="pr-16 text-white text-xl font-bold relative top-4">
+          {' '}
+          <h1>Welcome {data[0]?.displayName}!!</h1>
+        </div>
+
+        <div>
+          {' '}
+          <button
+            onClick={handlesignout}
+            className="p-2 w-24 bg-red-600 text-white text-l mt-3 font-bold rounded-md"
+          >
+            Sign Out
+          </button>
+        </div>
         <br />
       </div>
     </div>
