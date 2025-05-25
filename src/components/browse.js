@@ -1,16 +1,21 @@
 import { useEffect } from 'react'
 import { browse_bg, options } from '../utils/constants'
+import { addmovie } from '../utils/movieslice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Browse = () => {
+  const dispatch = useDispatch()
+  const d = useSelector((store) => store.movieslice.items)
+
+  console.log(d)
+  const url =
+    'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1'
   useEffect(() => {
     async function tmdb() {
       try {
-        const raw = await fetch(
-          'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
-          options
-        )
+        const raw = await fetch(url, options)
         const data = await raw.json()
-        console.log(data)
+        dispatch(addmovie({ data }))
       } catch (error) {
         console.error('Error fetching data:', error)
       }

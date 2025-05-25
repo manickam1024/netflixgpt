@@ -11,6 +11,7 @@ const slice = createSlice({
       state.items.pop()
     },
   },
+  name: 'movie',
 })
 
 export const { additem, removeitem } = slice.actions
